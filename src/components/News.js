@@ -27,7 +27,6 @@ export default class News extends Component {
             Loading: false
         }
     }
-
     async componentDidMount(){
         let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=b04ef152ebfc458ab8d05f0aa8c6bdc0&page=1&pageSize=${this.props.pageSize}`;
         this.setState({Loading: true})
