@@ -19,7 +19,6 @@ export default class News extends Component {
 
     constructor(){
         super();
-        console.log("Constructor inside News component")
         this.state = {
             articles: [],
             page: 1,
@@ -27,8 +26,10 @@ export default class News extends Component {
             Loading: false
         }
     }
-    async componentDidMount(){
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=b04ef152ebfc458ab8d05f0aa8c6bdc0&page=1&pageSize=${this.props.pageSize}`;
+
+    async updatePage(){
+        console.log("UpdatePage")
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=b04ef152ebfc458ab8d05f0aa8c6bdc0&page=${this.state.page}&pageSize=${this.props.pageSize}`;
         this.setState({Loading: true})
         await fetch(url)
             .then(data => data.json())
@@ -44,32 +45,18 @@ export default class News extends Component {
             ).catch(err => console.log("error: " + err));
     }
 
-    handlePrevbtn = async () => {
-        console.log("Prevbtn")
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=b04ef152ebfc458ab8d05f0aa8c6bdc0&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
-        this.setState({Loading: true})
-        let data = await fetch(url);
-        let processedData = await data.json();
-        console.log(processedData)
-        this.setState({
-            page: this.state.page - 1,
-            articles: processedData.articles,
-            Loading: false
-        })
+    componentDidMount(){
+       this.updatePage();
     }
 
-    handleNextbtn = async () => {
-        console.log("Nextbtn")
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=b04ef152ebfc458ab8d05f0aa8c6bdc0&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
-        this.setState({Loading: true})  
-            let data = await fetch(url);
-            let processedData = await data.json();
-            console.log(processedData)
-            this.setState({
-                articles: processedData.articles,
-                page: this.state.page + 1,
-                Loading: false           
-            })            
+    handlePrevbtn = () => {
+        this.setState({page: this.state.page - 1});
+        this.updatePage();
+    }
+
+    handleNextbtn = () => {          
+        this.setState({page: this.state.page + 1});
+        this.updatePage();
     }
 
     render() {
@@ -80,7 +67,7 @@ export default class News extends Component {
                 <div className='row'>
                 { !this.state.Loading && this.state.articles.map((element)=>{
                     return <div className='col-md-4' key={element.url}>
-                        <NewsItem title={element.title} desc={element.description} imageUrl={element.urlToImage} newsUrl={element.url}/>
+                        <NewsItem title={element.title} desc={element.description} imageUrl={element.urlToImage} newsUrl={element.url} publishedAt={element.publishedAt} author={element.author} source={element.source.name}/>
                     </div>
                 })}
                 </div>
