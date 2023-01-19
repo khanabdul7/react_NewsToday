@@ -34,19 +34,22 @@ export default class News extends Component {
     }
 
     async updatePage() {
-        console.log("UpdatePage")
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=b04ef152ebfc458ab8d05f0aa8c6bdc0&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+        this.props.setProgress(10);
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apikey}&page=${this.state.page}&pageSize=${this.props.pageSize}`;
         this.setState({ Loading: true })
         await fetch(url)
             .then(data => data.json())
             .then(processedData => {
+                this.props.setProgress(30);
                 console.log(processedData)
+                this.props.setProgress(50);
                 this.setState({
                     articles: processedData.articles,
                     page: this.state.page,
                     totalResults: processedData.totalResults,
                     Loading: false
                 })
+                this.props.setProgress(100);
             }
             ).catch(err => console.log("error: " + err));
     }
@@ -55,19 +58,9 @@ export default class News extends Component {
         this.updatePage();
     }
 
-    handlePrevbtn = () => {
-        this.setState({ page: this.state.page - 1 });
-        this.updatePage();
-    }
-
-    handleNextbtn = () => {
-        this.setState({ page: this.state.page + 1 });
-        this.updatePage();
-    }
-
     fetchMoreData = async () => {
         this.setState({ page: this.state.page + 1 });
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=b04ef152ebfc458ab8d05f0aa8c6bdc0&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apikey}&page=${this.state.page}&pageSize=${this.props.pageSize}`;
         this.setState({ Loading: true })
         await fetch(url)
             .then(data => data.json())
