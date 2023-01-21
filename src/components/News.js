@@ -11,8 +11,6 @@ const News = (props) => {
     const [totalResults, setTotalResults] = useState(0)
     const [loading, setLoading] = useState(true)
 
-    // document.title = `NewsToday - ${firstLetterCapital(props.category)}`
-
     const firstLetterCapital = (string) => {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
@@ -37,6 +35,7 @@ const News = (props) => {
     }
 
     useEffect(() => {
+        document.title = `NewsToday - ${firstLetterCapital(props.category)}`
         updatePage()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
